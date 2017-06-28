@@ -2,7 +2,7 @@
 
 namespace Quidjibo.Sample.RelatedJobs.Commands
 {
-    public class MakeCrustCommand : IWorkCommand
+    public class MakeCrustCommand : IQuidjiboCommand
     {
     }
 }

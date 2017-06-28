@@ -7,10 +7,10 @@ namespace Quidjibo.Owin.Sample.Extensions
 {
     public static class QuidjiboAppBuilderExtensions
     {
-        public static IAppBuilder UseWorkServer(this IAppBuilder appBuilder, Func<IWorkServer> workServer)
+        public static IAppBuilder UseQuidjiboServer(this IAppBuilder appBuilder, Func<Quidjibo.> QuidjiboServer)
         {
             var props = new AppProperties(appBuilder.Properties);
-            var server = workServer();
+            var server = QuidjiboServer();
             props.OnAppDisposing.Register(server.Dispose);
             server.Start();
             return appBuilder;

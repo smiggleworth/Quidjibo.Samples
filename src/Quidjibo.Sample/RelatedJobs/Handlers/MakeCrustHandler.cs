@@ -7,7 +7,7 @@ using Quidjibo.Sample.RelatedJobs.Commands;
 
 namespace Quidjibo.Sample.RelatedJobs.Handlers
 {
-    public class MakeCrustHandler : IWorkHandler<MakeCrustCommand> {
+    public class MakeCrustHandler : IQuidjiboHandler<MakeCrustCommand> {
         public Task ProcessAsync(MakeCrustCommand command, IProgress<Tracker> progress, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();

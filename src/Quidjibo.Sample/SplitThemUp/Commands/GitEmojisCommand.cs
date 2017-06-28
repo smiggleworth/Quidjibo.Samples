@@ -5,7 +5,7 @@ using Quidjibo.Commands;
 
 namespace Quidjibo.Sample.SplitThemUp.Commands
 {
-    public class GitEmojisCommand : IWorkCommand
+    public class GitEmojisCommand : IQuidjiboCommand
     {
     }
 }

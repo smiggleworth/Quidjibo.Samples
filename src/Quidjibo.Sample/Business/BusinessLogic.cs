@@ -8,11 +8,11 @@ namespace Quidjibo.Sample.Business
 {
     public class BusinessLogic
     {
-        private readonly IPublisherClient _publisherClient;
+        private readonly IQuidjiboClient _quidjiboClient;
 
-        public BusinessLogic(IPublisherClient publisherClient)
+        public BusinessLogic(IQuidjiboClient quidjiboClient)
         {
-            _publisherClient = publisherClient;
+            _quidjiboClient = quidjiboClient;
         }
 
         public async Task BusinessWithFireAndForget()
@@ -23,7 +23,7 @@ namespace Quidjibo.Sample.Business
 
             var command = new ExampleJob.Command("hello world!");
 
-            await _publisherClient.PublishAsync(command, CancellationToken.None);
+            await _quidjiboClient.PublishAsync(command, CancellationToken.None);
 
             // more of your business...
         }
@@ -44,19 +44,19 @@ namespace Quidjibo.Sample.Business
 
                      // if the previous steps succeed then run all of these
                          new ExampleJob.Command("Just this one thing"))
-                 .Then(step => new IWorkCommand[]
+                 .Then(step => new IQuidjiboCommand[]
                  {
                      // if the previous steps succeed then run all of these
                      new ExampleJob.Command($"step {step} part 1"),
                      new ExampleJob.Command($"step {step} part 2"),
                      new ExampleJob.Command($"step {step} part 3")
-                 }).Then(step => new IWorkCommand[]
+                 }).Then(step => new IQuidjiboCommand[]
                  {
                      // if the previous steps succeed then run all of these
                      new ExampleJob.Command($"step {step} part 1"),
                      new ExampleJob.Command($"step {step} part 2"),
                      new ExampleJob.Command($"step {step} part 3")
-                 }).Then(step => new IWorkCommand[]
+                 }).Then(step => new IQuidjiboCommand[]
                  {
                      // if the previous steps succeed then run all of these
                      new ExampleJob.Command($"step {step} part 1"),
@@ -64,7 +64,7 @@ namespace Quidjibo.Sample.Business
                      new ExampleJob.Command($"step {step} part 3")
                  });
 
-            await _publisherClient.PublishAsync(workflow, CancellationToken.None);
+            await _quidjiboClient.PublishAsync(workflow, CancellationToken.None);
 
             // more of your business...
         }

@@ -7,7 +7,7 @@ using Quidjibo.Sample.RelatedJobs.Commands;
 
 namespace Quidjibo.Sample.RelatedJobs.Handlers
 {
-    public class MakeFillingHandler : IWorkHandler<MakeFillingCommand> {
+    public class MakeFillingHandler : IQuidjiboHandler<MakeFillingCommand> {
         public Task ProcessAsync(MakeFillingCommand command, IProgress<Tracker> progress, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();

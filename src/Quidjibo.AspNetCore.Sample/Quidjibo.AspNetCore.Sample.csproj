@@ -8,6 +8,7 @@
     <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81;</PackageTargetFallback>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.1.1" />
@@ -16,9 +17,10 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="1.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
-    <PackageReference Include="Quidjibo" Version="1.0.0-ci-1153" />
-    <PackageReference Include="Quidjibo.AspNetCore" Version="1.0.0-ci-1149" />
-    <PackageReference Include="Quidjibo.SqlServer" Version="1.0.0-ci-1149" />
+    <PackageReference Include="Quidjibo" Version="1.0.0-dev.1353" />
+    <PackageReference Include="Quidjibo.AspNetCore" Version="1.0.0-dev.1353" />
+    <PackageReference Include="Quidjibo.Autofac" Version="1.0.0-dev.1353" />
+    <PackageReference Include="Quidjibo.SqlServer" Version="1.0.0-dev.1353" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.3.0" />
     <PackageReference Include="System.Reflection" Version="4.3.0" />
@@ -32,6 +34,11 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Quidjibo.Sample\Quidjibo.Sample.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Web">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.2\System.Web.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

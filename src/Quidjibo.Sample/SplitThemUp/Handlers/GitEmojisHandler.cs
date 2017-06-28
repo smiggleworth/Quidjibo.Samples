@@ -9,7 +9,7 @@ using Quidjibo.Sample.SplitThemUp.Commands;
 
 namespace Quidjibo.Sample.SplitThemUp.Handlers
 {
-    public class GitEmojisHandler : IWorkHandler<GitEmojisCommand>
+    public class GitEmojisHandler : IQuidjiboHandler<GitEmojisCommand>
     {
         public async Task ProcessAsync(GitEmojisCommand command, IProgress<Tracker> progress, CancellationToken cancellationToken)
         {

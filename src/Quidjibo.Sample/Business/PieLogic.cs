@@ -15,7 +15,7 @@ namespace Quidjibo.Sample.Business
         {
             var publisher = new PublisherClient(factory);
             var workflow = new WorkflowCommand(new PreheatCommand())
-                .Then(i => new IWorkCommand[]
+                .Then(i => new IQuidjiboCommand[]
                 {
                     new MakeCrustCommand(),
                     new MakeFillingCommand()

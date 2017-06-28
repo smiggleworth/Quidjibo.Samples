@@ -13,7 +13,7 @@ namespace Quidjibo.Sample.Jobs
 
     public class ExampleJob
     {
-        public class Command : IWorkCommand
+        public class Command : IQuidjiboCommand
         {
             public string Blah { get; }
 
@@ -23,7 +23,7 @@ namespace Quidjibo.Sample.Jobs
             }
         }
 
-        public class Handler : IWorkHandler<Command>
+        public class Handler : IQuidjiboHandler<Command>
         {
             public async Task ProcessAsync(Command command, IProgress<Tracker> progress,
                 CancellationToken cancellationToken)

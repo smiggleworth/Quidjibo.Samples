@@ -1,11 +1,17 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Web.Compilation;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Quidjibo.AspNet.Extensions;
+using Quidjibo.Autofac.Modules;
+using Quidjibo.Clients;
 using Quidjibo.Factories;
 using Quidjibo.Sample.Business;
 using Quidjibo.SqlServer.Configurations;
@@ -28,10 +34,19 @@ namespace Quidjibo.AspNetCore.Sample
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceCollection ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddMvc();
+            services.AddMvc().AddControllersAsServices();
+
+
+            var assemblies = BuildManager.GetReferencedAssemblies().OfType<Assembly>();
+
+            var containerBuilder = new ContainerBuilder();
+            containerBuilder.RegisterModule(new QuidjiboModule(assemblies));
+            containerBuilder.Populate(services);
+            var container = containerBuilder.Build();
+            return new AutofacServiceProvider(container);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

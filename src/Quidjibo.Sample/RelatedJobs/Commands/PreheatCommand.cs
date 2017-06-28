@@ -2,7 +2,7 @@
 
 namespace Quidjibo.Sample.RelatedJobs.Commands
 {
-    public class PreheatCommand : IWorkCommand
+    public class PreheatCommand : IQuidjiboCommand
     {
     }
 }

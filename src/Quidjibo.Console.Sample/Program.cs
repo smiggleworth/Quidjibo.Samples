@@ -1,18 +1,15 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Quidjibo.Clients;
-using Quidjibo.Commands;
-using Quidjibo.Factories;
 using Quidjibo.Models;
 using Quidjibo.Sample.Business;
-using Quidjibo.Sample.Jobs;
 using Quidjibo.Sample.SplitThemUp.Commands;
 using Quidjibo.SqlServer.Configurations;
-using Quidjibo.SqlServer.Factories;
+using Quidjibo.SqlServer.Extensions;
 
 namespace Quidjibo.Console.Sample
 {
@@ -25,34 +22,38 @@ namespace Quidjibo.Console.Sample
             loggerFactory.AddProvider(new ConsoleLoggerProvider((text, logLevel) => logLevel >= LogLevel.Debug, true));
 
 
-            var connectionString = ConfigurationManager.ConnectionStrings["SampleDb"].ConnectionString;
-            var workProviderFactory = new SqlWorkProviderFactory(connectionString);
-            var scheduleProviderFactory = new SqlScheduleProviderFactory(connectionString);
-            var progressProviderFactory = new SqlProgressProviderFactory(connectionString);
 
-            var configuration = new SqlServerWorkConfiguration
-            {
-                Queues = new List<string>
+
+            var quidjiboBuilder = new QuidjiboBuilder()
+                .UseSqlServer(new SqlServerQuidjiboConfiguration
                 {
-                    "default",
-                    "other-stuff"
-                },
-                PollingInterval = 10,
-                Throttle = 2
-            };
+                    // load your connection string
+                    ConnectionString = "Server=localhost;Database=SampleDb;Trusted_Connection=True;",
 
-            var task = PublishAway(workProviderFactory);
+                    // the queues the worker should be polling
+                    Queues = new List<string>
+                    {
+                        "default"
+                    },
+
+                    // the delay between batches
+                    PollingInterval = 10,
+
+                    // maximum concurrent requests
+                    Throttle = 2,
+                    SingleLoop = true
+                });
+
+
+            var client = quidjiboBuilder.BuildClient();
+
+
+            var task = PublishAway(client);
 
 
 
 
-            using (var workServer = WorkServerFactory.Create(
-                typeof(BusinessLogic).Assembly,
-                configuration,
-                workProviderFactory,
-                scheduleProviderFactory,
-                progressProviderFactory,
-                loggerFactory))
+            using (var workServer = quidjiboBuilder.BuildServer())
             {
                 workServer.Start();
                 System.Console.WriteLine("Press any key to exit.");
@@ -61,10 +62,10 @@ namespace Quidjibo.Console.Sample
         }
 
 
-        private static async Task PublishAway(IWorkProviderFactory factory)
+        private static async Task PublishAway(IQuidjiboClient client)
         {
-            var publisher = new PublisherClient(factory);
-            var logic = new BusinessLogic(publisher);
+
+            var logic = new BusinessLogic(client);
             while (true)
             {
                 await logic.BusinessWithFireAndForget();
@@ -72,10 +73,9 @@ namespace Quidjibo.Console.Sample
             }
         }
 
-        private static async Task ScheduleSomthing(IScheduleProviderFactory factory)
+        private static async Task ScheduleSomthing(IQuidjiboClient client)
         {
-            var s = new SchedulerClient(factory);
-            await s.ScheduleAsync("GitEmojis", new GitEmojisCommand(), new Cron("0 22 * * 6"));
+            await client.ScheduleAsync("GitEmojis", new GitEmojisCommand(), new Cron("0 22 * * 6"));
         }
     }
 }

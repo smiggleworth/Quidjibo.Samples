@@ -7,9 +7,9 @@ using Quidjibo.Models;
 
 namespace Quidjibo.Sample.RelatedJobs.Handlers
 {
-    public class PreheatHandler : IWorkHandler<IWorkCommand>
+    public class PreheatHandler : IQuidjiboHandler<IQuidjiboCommand>
     {
-        public Task ProcessAsync(IWorkCommand command, IProgress<Tracker> progress, CancellationToken cancellationToken)
+        public Task ProcessAsync(IQuidjiboCommand command, IProgress<Tracker> progress, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

@@ -11,7 +11,7 @@ namespace Quidjibo.Sample.Jobs
     public class LongRunningJob
     {
         [QueueName("slow-jobs")]
-        public class Command : IWorkCommand
+        public class Command : IQuidjiboCommand
         {
             public string Hello { get; }
 
@@ -21,7 +21,7 @@ namespace Quidjibo.Sample.Jobs
             }
         }
 
-        public class Handler : IWorkHandler<Command>
+        public class Handler : IQuidjiboHandler<Command>
         {
             public async Task ProcessAsync(Command command, IProgress<Tracker> progress,
                 CancellationToken cancellationToken)
