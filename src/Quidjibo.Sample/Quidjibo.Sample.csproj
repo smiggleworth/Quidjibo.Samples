@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Quidjibo" Version="1.0.0-dev.1353" />
+    <PackageReference Include="Quidjibo" Version="1.0.0-dev.1374" />
     <PackageReference Include="System.Reflection.TypeExtensions" Version="4.3.0" />
   </ItemGroup>
 

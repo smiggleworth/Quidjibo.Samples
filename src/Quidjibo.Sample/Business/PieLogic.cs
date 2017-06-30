@@ -11,9 +11,9 @@ namespace Quidjibo.Sample.Business
 
 
 
-        private  async Task MakePies(IWorkProviderFactory factory)
+        private  async Task MakePies()
         {
-            var publisher = new PublisherClient(factory);
+            var client = QuidjiboClient.Instance;
             var workflow = new WorkflowCommand(new PreheatCommand())
                 .Then(i => new IQuidjiboCommand[]
                 {
@@ -23,7 +23,7 @@ namespace Quidjibo.Sample.Business
                 .Then(i => new BakeCommand())
                 .Then(i => new PackageCommand());
 
-            await publisher.PublishAsync(workflow);
+            await client.PublishAsync(workflow);
 
         }
 
