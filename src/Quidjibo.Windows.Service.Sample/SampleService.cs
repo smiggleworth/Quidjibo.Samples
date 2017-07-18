@@ -3,16 +3,13 @@ using System.Configuration;
 using System.ServiceProcess;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
-using Quidjibo.Factories;
-using Quidjibo.Servers;
-using Quidjibo.SqlServer.Configurations;
-using Quidjibo.SqlServer.Factories;
+
 
 namespace Quidjibo.Windows.Service.Sample
 {
     public partial class SampleService : ServiceBase
     {
-        private IWorkServer _workServer;
+        private IQuidjiboServer _workServer;
 
         public SampleService()
         {
@@ -26,28 +23,25 @@ namespace Quidjibo.Windows.Service.Sample
             loggerFactory.AddProvider(new ConsoleLoggerProvider((text, logLevel) => logLevel >= LogLevel.Debug, true));
 
 
-            var connectionString = ConfigurationManager.ConnectionStrings["SampleDb"].ConnectionString;
-            var workProviderFactory = new SqlWorkProviderFactory(connectionString);
-            var scheduleProviderFactory = new SqlScheduleProviderFactory(connectionString);
-            var progressProviderFactory = new SqlProgressProviderFactory(connectionString);
-
-            var configuration = new SqlServerWorkConfiguration
-            {
-                Queues = new List<string>
+            var quidjiboBuilder = new QuidjiboBuilder()
+                .UseSqlServer(new SqlServerQuidjiboConfiguration
                 {
-                    "default",
-                    "other-stuff"
-                },
-                PollingInterval = 30,
-                Throttle = 2
-            };
-            _workServer = WorkServerFactory.Create(
-                typeof(Program).Assembly,
-                configuration,
-                workProviderFactory,
-                scheduleProviderFactory,
-                progressProviderFactory,
-                loggerFactory);
+                    // load your connection string
+                    ConnectionString = "Server=localhost;Database=SampleDb;Trusted_Connection=True;",
+
+                    // the queues the worker should be polling
+                    Queues = new List<string>
+                    {
+                        "default"
+                    },
+
+                    // the delay between batches
+                    PollingInterval = 10,
+
+                    // maximum concurrent requests
+                    Throttle = 2,
+                    SingleLoop = true
+                });
 
             _workServer.Start();
         }

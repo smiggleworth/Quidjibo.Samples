@@ -7,14 +7,18 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.2" />
-    <PackageReference Include="Quidjibo" Version="1.0.0-dev.1374" />
-    <PackageReference Include="Quidjibo.Autofac" Version="1.0.0-dev.1374" />
-    <PackageReference Include="Quidjibo.SqlServer" Version="1.0.0-dev.1374" />
-    <PackageReference Include="Quidjibo.DataProtection" Version="1.0.0-dev.1374" />
+    <PackageReference Include="Quidjibo" Version="1.0.0-dev.1376" />
+    <PackageReference Include="Quidjibo.Autofac" Version="1.0.0-dev.1376" />
+    <PackageReference Include="Quidjibo.SqlServer" Version="1.0.0-dev.1376" />
+    <PackageReference Include="Quidjibo.DataProtection" Version="1.0.0-dev.1376" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Quidjibo.Sample\Quidjibo.Sample.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
 
 </Project>

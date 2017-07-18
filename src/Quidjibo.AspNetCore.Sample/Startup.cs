@@ -74,6 +74,27 @@ namespace Quidjibo.AspNetCore.Sample
                     "{controller=Home}/{action=Index}/{id?}");
             });
 
+
+            var quidjiboBuilder = new QuidjiboBuilder()
+                .UseSqlServer(new SqlServerQuidjiboConfiguration
+                {
+                    // load your connection string
+                    ConnectionString = "Server=localhost;Database=SampleDb;Trusted_Connection=True;",
+
+                    // the queues the worker should be polling
+                    Queues = new List<string>
+                    {
+                        "default"
+                    },
+
+                    // the delay between batches
+                    PollingInterval = 10,
+
+                    // maximum concurrent requests
+                    Throttle = 2,
+                    SingleLoop = true
+                });
+
             // UserWorkServer will automatically start and stop the work server
             app.UseWorkServer(() =>
             {
