@@ -48,6 +48,7 @@ namespace Quidjibo.Console.Sample
                 workServer.Dispose();
                 cts.Cancel();
             };
+            PublishAway(cts.Token).Wait(cts.Token);
         }
 
         private static async Task PublishAway(CancellationToken token)
