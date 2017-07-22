@@ -3,6 +3,9 @@ using System.Configuration;
 using System.ServiceProcess;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
+using Quidjibo.Servers;
+using Quidjibo.SqlServer.Configurations;
+using Quidjibo.SqlServer.Extensions;
 
 
 namespace Quidjibo.Windows.Service.Sample
@@ -21,7 +24,6 @@ namespace Quidjibo.Windows.Service.Sample
             var loggerFactory = new LoggerFactory().AddConsole().AddDebug();
 
             loggerFactory.AddProvider(new ConsoleLoggerProvider((text, logLevel) => logLevel >= LogLevel.Debug, true));
-
 
             var quidjiboBuilder = new QuidjiboBuilder()
                 .UseSqlServer(new SqlServerQuidjiboConfiguration
@@ -42,6 +44,11 @@ namespace Quidjibo.Windows.Service.Sample
                     Throttle = 2,
                     SingleLoop = true
                 });
+
+            _workServer = quidjiboBuilder.BuildServer();
+            
+            // if any job needs to publish you can also build the necessary clients
+            quidjiboBuilder.BuildClient();
 
             _workServer.Start();
         }

@@ -7,6 +7,9 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.2" />
+    <PackageReference Include="Quidjibo" Version="1.0.0-CI-1441-dev" />
+    <PackageReference Include="Quidjibo.Autofac" Version="1.0.0-CI-1441-dev" />
+    <PackageReference Include="Quidjibo.SqlServer" Version="1.0.0-CI-1441-dev" />
   </ItemGroup>
 
   <ItemGroup>

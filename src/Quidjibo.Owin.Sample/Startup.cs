@@ -9,6 +9,7 @@ using Quidjibo.Factories;
 using Quidjibo.Owin.Sample;
 using Quidjibo.Owin.Sample.Extensions;
 using Quidjibo.SqlServer.Configurations;
+using Quidjibo.SqlServer.Extensions;
 using Quidjibo.SqlServer.Factories;
 
 [assembly: OwinStartup(typeof(Startup))]
@@ -24,26 +25,28 @@ namespace Quidjibo.Owin.Sample
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
 
-            // UserWorkServer will automatically start and stop the work server
-            app.UseWorkServer(() =>
-            {
-                var connectionString = ConfigurationManager.ConnectionStrings["SampleDb"].ConnectionString;
-                var workProviderFactory = new SqlWorkProviderFactory(connectionString);
-                var scheduleProviderFactory = new SqlScheduleProviderFactory(connectionString);
-                var progressProviderFactory = new SqlProgressProviderFactory(connectionString);
-                var configuration = new SqlServerWorkConfiguration
+            var quidjiboBuilder = new QuidjiboBuilder()
+                .UseSqlServer(new SqlServerQuidjiboConfiguration
                 {
+                    // load your connection string
+                    ConnectionString = "Server=localhost;Database=SampleDb;Trusted_Connection=True;",
+
+                    // the queues the worker should be polling
                     Queues = new List<string>
                     {
                         "default",
-                        "other-stuff"
+                        "other"
                     },
-                    PollingInterval = 30,
-                    Throttle = 2
-                };
-                return WorkServerFactory.Create(typeof(Startup).Assembly, configuration, workProviderFactory,
-                    scheduleProviderFactory, progressProviderFactory);
-            });
+
+                    // the delay between batches
+                    PollingInterval = 10,
+
+                    // maximum concurrent requests
+                    Throttle = 2,
+                    SingleLoop = true
+                });
+
+            app.UseQuidjibo(quidjiboBuilder);
         }
     }
 }

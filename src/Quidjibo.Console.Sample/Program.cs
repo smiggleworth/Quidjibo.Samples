@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,17 +15,10 @@ namespace Quidjibo.Console.Sample
 {
     internal class Program
     {
-
-
         private static void Main(string[] args)
         {
-
-
-
             var loggerFactory = new LoggerFactory().AddConsole().AddDebug();
-
             loggerFactory.AddProvider(new ConsoleLoggerProvider((text, logLevel) => logLevel >= LogLevel.Debug, true));
-
             var quidjiboBuilder = new QuidjiboBuilder()
                 .UseSqlServer(new SqlServerQuidjiboConfiguration
                 {
@@ -36,7 +28,8 @@ namespace Quidjibo.Console.Sample
                     // the queues the worker should be polling
                     Queues = new List<string>
                     {
-                        "default", "other"
+                        "default",
+                        "other"
                     },
 
                     // the delay between batches
@@ -46,40 +39,26 @@ namespace Quidjibo.Console.Sample
                     Throttle = 2,
                     SingleLoop = true
                 });
-
-            var client = quidjiboBuilder.BuildClient();
-
-
-            var task = PublishAway(client);
-            var workServer = quidjiboBuilder.BuildServer();
-            
-                workServer.Start();
-
-
-
             var cts = new CancellationTokenSource();
+            var client = quidjiboBuilder.BuildClient();
+            var workServer = quidjiboBuilder.BuildServer();
+            workServer.Start();
             System.Console.CancelKeyPress += (s, e) =>
             {
-                workServer.Stop();
                 workServer.Dispose();
-                
                 cts.Cancel();
             };
-            while (!cts.IsCancellationRequested)
-            {
-                
-            }
         }
 
-
-        private static async Task PublishAway(IQuidjiboClient client)
+        private static async Task PublishAway(CancellationToken token)
         {
-
-            var logic = new BusinessLogic(client);
-            while (true)
+            while (!token.IsCancellationRequested)
             {
+                // use a the static client
+                var client = (IQuidjiboClient)QuidjiboClient.Instance;
+                var logic = new BusinessLogic(client);
                 await logic.BusinessWithFireAndForget();
-                await Task.Delay(TimeSpan.FromSeconds(1));
+                await Task.Delay(TimeSpan.FromSeconds(1), token);
             }
         }
 

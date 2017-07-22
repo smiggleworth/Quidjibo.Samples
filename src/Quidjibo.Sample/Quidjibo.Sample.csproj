@@ -5,23 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Business\**" />
-    <Compile Remove="Jobs\**" />
-    <Compile Remove="RelatedJobs\**" />
-    <Compile Remove="SplitThemUp\**" />
-    <EmbeddedResource Remove="Business\**" />
-    <EmbeddedResource Remove="Jobs\**" />
-    <EmbeddedResource Remove="RelatedJobs\**" />
-    <EmbeddedResource Remove="SplitThemUp\**" />
-    <None Remove="Business\**" />
-    <None Remove="Jobs\**" />
-    <None Remove="RelatedJobs\**" />
-    <None Remove="SplitThemUp\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.2" />
+    <PackageReference Include="Quidjibo" Version="1.0.0-CI-1441-dev" />
   </ItemGroup>
 
 </Project>

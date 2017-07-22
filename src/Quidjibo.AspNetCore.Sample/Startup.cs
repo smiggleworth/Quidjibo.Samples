@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿
+
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Web.Compilation;
@@ -9,13 +12,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Quidjibo.AspNet.Extensions;
+using Quidjibo.AspNetCore.Extensions;
 using Quidjibo.Autofac.Modules;
-using Quidjibo.Clients;
-using Quidjibo.Factories;
-using Quidjibo.Sample.Business;
 using Quidjibo.SqlServer.Configurations;
-using Quidjibo.SqlServer.Factories;
+using Quidjibo.SqlServer.Extensions;
 
 namespace Quidjibo.AspNetCore.Sample
 {
@@ -34,16 +34,16 @@ namespace Quidjibo.AspNetCore.Sample
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public IServiceCollection ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
             services.AddMvc().AddControllersAsServices();
 
 
-            var assemblies = BuildManager.GetReferencedAssemblies().OfType<Assembly>();
+            var jobAssemblies = typeof(Quidjibo.Sample.Jobs.ExampleJob).GetTypeInfo().Assembly;
 
             var containerBuilder = new ContainerBuilder();
-            containerBuilder.RegisterModule(new QuidjiboModule(assemblies));
+            containerBuilder.RegisterModule(new QuidjiboModule(jobAssemblies));
             containerBuilder.Populate(services);
             var container = containerBuilder.Build();
             return new AutofacServiceProvider(container);
@@ -82,9 +82,9 @@ namespace Quidjibo.AspNetCore.Sample
                     ConnectionString = "Server=localhost;Database=SampleDb;Trusted_Connection=True;",
 
                     // the queues the worker should be polling
-                    Queues = new List<string>
+                    Queues = new List<string>(2)
                     {
-                        "default"
+                        "default", "other"
                     },
 
                     // the delay between batches
@@ -96,28 +96,7 @@ namespace Quidjibo.AspNetCore.Sample
                 });
 
             // UserWorkServer will automatically start and stop the work server
-            app.UseWorkServer(() =>
-            {
-                var connectionString = Configuration.GetConnectionString("SampleDb");
-                var sqlWorkProviderFactory = new SqlWorkProviderFactory(connectionString);
-                var sqlScheduleProviderFactory = new SqlScheduleProviderFactory(connectionString);
-                var sqlProgressProviderFactory = new SqlProgressProviderFactory(connectionString);
-                var configuration = new SqlServerWorkConfiguration
-                {
-                    Queues = new List<string>
-                    {
-                        "default",
-                        "other-stuff"
-                    },
-                    PollingInterval = 10,
-                    Throttle = 2
-                };
-                return WorkServerFactory.Create(typeof(BusinessLogic).GetTypeInfo().Assembly, configuration,
-                    sqlWorkProviderFactory,
-                    sqlScheduleProviderFactory,
-                    sqlProgressProviderFactory,
-                    loggerFactory);
-            });
+            app.UseQuidjiboServer(quidjiboBuilder);
         }
     }
 }

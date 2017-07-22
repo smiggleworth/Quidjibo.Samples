@@ -17,6 +17,10 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="1.1.2" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="Quidjibo" Version="1.0.0-CI-1441-dev" />
+    <PackageReference Include="Quidjibo.AspNetCore" Version="1.0.0-CI-1441-dev" />
+    <PackageReference Include="Quidjibo.Autofac" Version="1.0.0-CI-1441-dev" />
+    <PackageReference Include="Quidjibo.SqlServer" Version="1.0.0-CI-1441-dev" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.3.1" />
     <PackageReference Include="System.Reflection" Version="4.3.0" />
